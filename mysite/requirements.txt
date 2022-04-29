@@ -1,0 +1,17 @@
+Django==3.0.10
+django-cors-headers==3.8.0
+asgiref==3.4.1
+django-mssql-backend==2.8.1
+djangorestframework==3.12.4
+pymssql==2.2.4
+pyodbc==4.0.32
+geopy==2.2.0
+requests==2.27.1
+setuptools==58.0.4
+wheel==0.37.0
+node==0.9.28
+mssql-django==1.0
+nodeenv==1.6.0
+geographiclib==1.52
+certifi==2021.10.8
+charset-normalizer==2.0.12

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<head>
+ <title>Coonect SQLDJango</title>
+</head>
+<body>
+  <center>
+      <h1>SQL DJANGO</h1>
+      <br>
+      <table border=1>
+         <tr> <th>ID
+          </th>
+          <th>Name</th>
+          <th>dept</th>
+          <th>DOJ</th>
+          <th>File</th>
+         </tr>
+         {% for row in Employee %}
+         <tr>
+             <td>{{row.EmployeeId}}</td>
+             <td>{{row.EmployeeName}}</td>
+             <td>{{row.Department}}</td>
+             <td>{{row.DateOfJoining}}</td>
+             <td>{{row.PhotoFileName}}</td>
+         </tr>
+         {%endfor%}
+      </table>
+  </center>
+</body>
+</html>

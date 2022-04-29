@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style>
+    #map {
+      height: 100%;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    } 
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    let map;
+    // global array to store the marker object 
+    let markersArray = [];
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: -34.397, lng: 150.644},
+        zoom: 8
+      });
+      addMarker({lat: -34.297, lng: 150.544}, "yellow");
+      addMarker({lat: -34.397, lng: 150.644}, "green");
+      addMarker({lat: -34.597, lng: 150.844}, "blue");
+    }
+
+    function addMarker(latLng, color) {
+      let url = "http://maps.google.com/mapfiles/ms/icons/";
+      url += color + "-dot.png";
+      
+      let marker = new google.maps.Marker({
+        map: map,
+        position: latLng,
+        icon: {
+          url: url,
+          //scaledSize: new google.maps.Size(38, 38)
+        }
+      });
+
+      //store the marker object drawn in global array
+      markersArray.push(marker);
+    }
+  </script>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwpdcqXensPDKcpxPdD3hIKU3NVq1b3DU&callback=initMap">
+  </script>
+</body>
+</html>
