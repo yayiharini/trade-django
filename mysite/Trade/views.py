@@ -389,20 +389,25 @@ def getrecords(request):
     q = ""
     query_prefix = '''
                  select 
-                 CONVERT(varchar, creation_date, 102) as date, 
-                 Trade.record_main.LitterAssessment as LitterAssessment,
-                 TRADE.record_main.plu as plu, 
-                 TRADE.record_main.permittee as permittee,
-                 TRADE.record_main.location_name as location, 
-                 TEMP.recid, TEMP.material_group,
-                 TRADE.record_main.x_value as x,
-                 TRADE.record_main.y_value as y,
-                 TEMP.itemcount 
-                 from TRADE.record_main, 
-                 (select TRADE.record_trashitem.recordid as recid, STRING_AGG(TRADE.record_trashitem.material_group,',') as material_group, SUM(TRADE.record_trashitem.itemcount)as itemcount 
-                 from TRADE.record_trashitem 
-                 group by TRADE.record_trashitem.recordid) TEMP
-                 where TRADE.record_main.RecordID=recid and  
+                    CONVERT(varchar, creation_date, 102) as date, 
+                    RecordMain.LitterAssessment as LitterAssessment,
+                    RecordMain.plu as plu, 
+                    RecordMain.permittee as permittee,
+                    RecordMain.location_name as location, 
+                    RecordMain.x_value as x,
+                    RecordMain.y_value as y,
+                    RecordMain.RecordId as recid,
+				    (select
+				    STRING_AGG(TRADE.trashitem.material_group,',') 
+				    from TRADE.trashitem
+				    where TRADE.trashitem.recordid = RecordMain.RecordID)
+				    as material_group,
+				    (select SUM(TRADE.trashitem.itemcount)as itemcount 
+                     from TRADE.trashitem
+				    where TRADE.trashitem.recordid = RecordMain.RecordID
+                    ) as itemcount
+                    from TRADE.record_main as RecordMain  
+                    where   
     '''
     if permitteenum:
         if permitteenum == "ALL":
@@ -410,9 +415,9 @@ def getrecords(request):
                  CAST(creation_date as DATE) between '{fromdate}' and '{todate}'  '''
         else:
             q = f'''{query_prefix}
-                TRADE.record_main.permittee = '{permitteenum}' and
+                RecordMain.permittee = '{permitteenum}' and
                 CAST(creation_date as DATE) between '{fromdate}' and '{todate}' 
-                and TRADE.record_main.plu in ('{"','".join([str(ele) for ele in pname])}') '''
+                and RecordMain.plu in ('{"','".join([str(ele) for ele in pname])}') '''
     elif city:
         if city == "ALL":
             print("entered city all")
@@ -421,7 +426,7 @@ def getrecords(request):
         else:
             print('enter', city)
             q = f'''{query_prefix} 
-                    TRADE.record_main.city = '{city}' 
+                    RecordMain.city = '{city}' 
                     and CAST(creation_date as DATE) between '{fromdate}' and '{todate}' '''
             print(q)
     elif county:
@@ -431,7 +436,7 @@ def getrecords(request):
                     CAST(creation_date as DATE) between '{fromdate}' and '{todate}' '''
         else:
             q = f'''{query_prefix} 
-                    TRADE.record_main.county = '{county}' 
+                    RecordMain.county = '{county}' 
                     and CAST(creation_date as DATE) between '{fromdate}' and '{todate}' '''
     elif shed:
         if shed == "ALL":
@@ -440,7 +445,7 @@ def getrecords(request):
                     CAST(creation_date as DATE) between '{fromdate}' and '{todate}' '''
         else:
             q = f''' {query_prefix}
-                TRADE.record_main.Watershed_Name = '{shed}' 
+                RecordMain.Watershed_Name = '{shed}' 
 
                 and CAST(creation_date as DATE) between '{fromdate}' and '{todate}' '''
     elif board:
@@ -450,7 +455,7 @@ def getrecords(request):
                     CAST(creation_date as DATE) between '{fromdate}' and '{todate}' '''
         else:
             q = f''' {query_prefix}
-                TRADE.record_main.Waterboard_Name = '{board}' 
+                RecordMain.Waterboard_Name = '{board}' 
 
                 and CAST(creation_date as DATE) between '{fromdate}' and '{todate}' '''
     result = cursor.execute(q)
