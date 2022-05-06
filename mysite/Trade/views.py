@@ -122,7 +122,8 @@ def get_material_group_count(request):
                            ( {sub_query} )
                            TempTable 
                         GROUP BY
-                       CAST( TempTable.material_group AS VARCHAR(100)) '''
+                       CAST( TempTable.material_group AS VARCHAR(100)) 
+		       order by Cast(TempTable.material_group AS VARCHAR(100)) '''
     print(final_query)
     material_group_count_list = []
     for row in cursor.execute(final_query):
@@ -149,7 +150,8 @@ def get_material_category_data(request):
                                         where
                                            CAST(TempTable.material_group AS VARCHAR(100)) = '{material_group}' 
                                         GROUP BY
-                                           CAST(TempTable.material_category AS VARCHAR(100)) '''
+                                           CAST(TempTable.material_category AS VARCHAR(100))
+					 order by Cast(TempTable.material_category AS VARCHAR(100))'''
 
     material_category_list = []
     for row in cursor.execute(material_category_query):
